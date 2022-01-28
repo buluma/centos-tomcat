@@ -1,4 +1,4 @@
-# centos-tomcat
+# Centos Tomcat
 
 [![Docker Image CI](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml/badge.svg)](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml)
 
@@ -7,9 +7,9 @@ Docker container: CentOS 7 + Java 17 + Tomcat 9
 ## Build the image
 
 ```sh
-git clone https://github.com/kirillF/centos-tomcat.git
+git clone https://github.com/buluma/centos-tomcat.git
 cd centos-tomcat
-docker build -t kirillf/centos-tomcat .
+docker build -t buluma/centos-tomcat .
 ```
 
 ## How to use
