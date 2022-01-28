@@ -1,5 +1,5 @@
 # Centos based container with Java and Tomcat
-FROM buluma/centos:centos7
+FROM buluma/centos:centos8
 MAINTAINER buluma
 
 # Install prepare infrastructure
