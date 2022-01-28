@@ -53,5 +53,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ github.repository }}:latest, ${{ github.repository }}:9.0.58
+            ${{ github.repository }}:latest, ${{ github.repository }}:10.0.16
             ghcr.io/${{ github.repository }}:latest
