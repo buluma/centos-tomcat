@@ -2,7 +2,7 @@
 
 [![Docker Image CI](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml/badge.svg)](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml)
 
-Docker container: CentOS 7 + Java 17 + Tomcat 9
+Docker container: CentOS 7 + Java 17 + Tomcat 10
 
 ## Build the image
 
@@ -32,6 +32,6 @@ If you got error while build the docker image, please check the latest version o
 |:-----------|:------------|:------------|
 |CentOS|7||
 |Java|17 [Java Release Note](https://jdk.java.net/17/release-notes)|
-|Apache Tomcat|9.0.58|[Tomcat Download Page](https://tomcat.apache.org/download-90.cgi)|
+|Apache Tomcat|10.0.16|[Tomcat Download Page](https://tomcat.apache.org/download-10.cgi)|
 
 [Docker Official Image for Tomcat](https://github.com/docker-library/tomcat) is also available.
