@@ -2,13 +2,20 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron: '0 2,5,7,9,12,14,18,20,22 * * *'
+    branches:
+      - main
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: 'false'
+  schedule:
+    - cron: '0 7 * * *'
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
 
