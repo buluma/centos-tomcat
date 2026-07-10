@@ -19,7 +19,7 @@ ENV JAVA_HOME /usr/lib/jvm/temurin-17-jdk
 
 # Install Tomcat
 ENV TOMCAT_MAJOR 10
-ENV TOMCAT_VERSION 10.0.16
+ENV TOMCAT_VERSION 10.1.28
 
 RUN wget https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz &&  tar -xvf apache-tomcat-${TOMCAT_VERSION}.tar.gz &&  rm apache-tomcat*.tar.gz &&  mv apache-tomcat* ${CATALINA_HOME}
 
