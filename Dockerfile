@@ -10,8 +10,10 @@ ENV JAVA_HOME /usr/java/latest
 ENV CATALINA_HOME /opt/tomcat 
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
-# Install Eclipse Temurin JDK 17 via Adoptium RPM repo
-RUN dnf -y install tar curl &&     curl -o /etc/yum.repos.d/adoptium.repo -L "https://packages.adoptium.net/artifactory/rpm/rocky/8/$(uname -m)" &&     dnf -y install temurin-17-jdk &&     java -version
+# Install Eclipse Temurin JDK 17 from Adoptium API
+RUN dnf -y install tar curl &&     curl -o /tmp/jdk17.tar.gz -L "https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse" &&     tar -xzf /tmp/jdk17.tar.gz -C /usr/local/ &&     mv /usr/local/jdk-* /usr/local/jdk17 &&     rm -f /tmp/jdk17.tar.gz &&     ln -s /usr/local/jdk17/bin/java /usr/bin/java
+
+ENV JAVA_HOME /usr/local/jdk17
 
 ENV JAVA_HOME /usr/lib/jvm/temurin-17-jdk
 
