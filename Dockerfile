@@ -10,10 +10,10 @@ ENV JAVA_HOME /usr/java/latest
 ENV CATALINA_HOME /opt/tomcat 
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
-# Install Oracle Java17
-ENV JAVA_VERSION 17
+# Install Eclipse Temurin JDK 17
+RUN dnf -y install tar &&     curl -o /tmp/jdk17.rpm -L "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.rpm" &&     dnf -y localinstall /tmp/jdk17.rpm &&     rm -f /tmp/jdk17.rpm &&     java -version
 
-RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"  https://download.oracle.com/java/${JAVA_VERSION}/latest/jdk-17_linux-x64_bin.rpm &&  dnf -y localinstall jdk-*_linux-x64_bin.rpm
+ENV JAVA_HOME /usr/lib/jvm/temurin-17-jdk
 
 # Install Tomcat
 ENV TOMCAT_MAJOR 10
