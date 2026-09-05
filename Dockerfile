@@ -35,6 +35,7 @@ RUN dnf -y install gnupg2 && \
     gpg --batch --verify apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc apache-tomcat-${TOMCAT_VERSION}.tar.gz && \
     SIGNER="$(gpg --batch --status-fd=1 --verify apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc apache-tomcat-${TOMCAT_VERSION}.tar.gz 2>/dev/null | awk '/^\[GNUPG:\] VALIDSIG /{ if (NF>=12 && $12 ~ /^[0-9A-F]{40}$/) print $12; else print $3; exit }')" && \
     case "$SIGNER" in \
+        *[![:xdigit:]]*) echo "GPG did not report a valid primary-key fingerprint: '$SIGNER'" >&2; exit 1 ;; \
         ????????????????????????????????????????) ;; \
         *) echo "GPG did not report a valid primary-key fingerprint: '$SIGNER'" >&2; exit 1 ;; \
     esac && \

@@ -14,7 +14,15 @@ BASE="https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}"
 CDN="https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}"
 ARTDIR="${1:--d}"
 OPTART="no"
-if [ "${1:-}" = "-d" ]; then ART="$2"; OPTART=yes; else ART=""; fi
+ART=""
+if [ "$#" -eq 0 ]; then
+    :
+elif [ "$#" -eq 2 ] && [ "$1" = "-d" ] && [ -d "$2" ]; then
+    ART="$2"; OPTART=yes
+else
+    echo "Usage: $0 [-d <artifact-dir>]" >&2
+    exit 2
+fi
 
 WORK="$(mktemp -d)"
 GNUPGHOME="$WORK/gnupg"; mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
@@ -31,6 +39,13 @@ is_allowed() {  # $1=signer fpr, rest = allowlist
     for a in "$@"; do [ "$s" = "$a" ] && return 0; done
     return 1
 }
+is_signer_shape() {  # $1=signer fpr
+    case "$1" in
+        *[![:xdigit:]]*) return 1 ;;
+        ????????????????????????????????????????) return 0 ;;
+        *) return 1 ;;
+    esac
+}
 sha512_of() { command -v sha512sum >/dev/null 2>&1 && sha512sum "$1" || shasum -a 512 "$1"; }
 fetch() { if command -v wget >/dev/null 2>&1; then wget -q -O "$1" "$2"; else curl -fsS -o "$1" "$2"; fi; }
 
@@ -38,6 +53,12 @@ ALLOWLIST=(5C3C5F3E314C866292F359A8F3AD5C94A67F707E A9C5DF4D22E99998D9875A5110C0
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
 ok()   { echo "ok:   $*"; }
+
+NON_HEX_SIGNER=ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+if is_signer_shape "$NON_HEX_SIGNER"; then
+    fail "non-hex signer passed shape validation: $NON_HEX_SIGNER"
+fi
+ok "non-hex signer is rejected"
 
 # ---------------------------------------------------------------- case 1
 echo "== Case 1: real Tomcat archive (signed by a subkey) =="
@@ -64,9 +85,7 @@ gpg --batch --verify "apache-tomcat-$TOMCAT_VERSION.tar.gz.asc" "apache-tomcat-$
     || fail "archive signature invalid"
 
 SIGNER=$(derive_signer "apache-tomcat-$TOMCAT_VERSION.tar.gz.asc" "apache-tomcat-$TOMCAT_VERSION.tar.gz")
-case "$SIGNER" in
-    ????????????????????????????????????????) ;; *) fail "bad signer shape: '$SIGNER'";;
-esac
+is_signer_shape "$SIGNER" || fail "bad signer shape: '$SIGNER'"
 is_allowed "$SIGNER" "${ALLOWLIST[@]}" || fail "signer not allowlisted: $SIGNER"
 ok "derived signer=$SIGNER is an allowed Tomcat release manager"
 [ "$SIGNER" = "${ALLOWLIST[0]}" ] && ok "subkey signature correctly mapped to primary key"
@@ -83,9 +102,7 @@ gpg --batch --yes --output fixture.tar.gz.asc --armor --detach-sign fixture.tar.
     || fail "cannot sign fixture with primary key"
 
 SIGNER2=$(derive_signer fixture.tar.gz.asc fixture.tar.gz)
-case "$SIGNER2" in
-    ????????????????????????????????????????) ;; *) fail "bad signer shape: '$SIGNER2'";;
-esac
+is_signer_shape "$SIGNER2" || fail "bad signer shape: '$SIGNER2'"
 [ "$SIGNER2" = "$FP" ] || fail "direct-primary signature mapped to wrong key: got $SIGNER2 want $FP"
 is_allowed "$SIGNER2" "$FP" || fail "allowlist rejected fixture primary key"
 ok "direct primary signature derived signer=$SIGNER2 passes allowlist"
