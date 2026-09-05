@@ -1,4 +1,4 @@
-# Centos based container with Java and Tomcat
+# Rocky Linux based container with Java and Tomcat
 FROM rockylinux:8
 MAINTAINER buluma
 
@@ -15,11 +15,9 @@ RUN dnf -y install tar curl &&     curl -o /tmp/jdk17.tar.gz -L "https://api.ado
 
 ENV JAVA_HOME /usr/local/jdk17
 
-ENV JAVA_HOME /usr/lib/jvm/temurin-17-jdk
-
 # Install Tomcat
 ENV TOMCAT_MAJOR 10
-ENV TOMCAT_VERSION 10.1.57
+ENV TOMCAT_VERSION 10.1.59
 
 RUN wget https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz &&  tar -xvf apache-tomcat-${TOMCAT_VERSION}.tar.gz &&  rm apache-tomcat*.tar.gz &&  mv apache-tomcat* ${CATALINA_HOME}
 
