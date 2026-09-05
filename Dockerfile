@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.authors="buluma"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install prepare infrastructure
-RUN dnf -y update &&  dnf -y install wget-1.19.5-11.el8 tar-1.30-10.el8_10 &&  dnf -y clean all &&  rm -rf /var/cache/dnf
+RUN dnf -y update &&  dnf -y install wget-1.19.5-16.el8_10 tar-1.30-11.el8_10 &&  dnf -y clean all &&  rm -rf /var/cache/dnf
 
 # Prepare environment 
 ENV CATALINA_HOME=/opt/tomcat
@@ -27,7 +27,7 @@ ARG TOMCAT_KEYS_SHA256=850f793865c1b4a64ba505429702e32a20d71a3accb81b34fb3bf9989
 
 WORKDIR /tmp
 
-RUN dnf -y install gnupg2-2.2.20-3.el8_6 &&  dnf -y clean all &&  rm -rf /var/cache/dnf && \
+RUN dnf -y install gnupg2-2.2.20-4.el8_10 &&  dnf -y clean all &&  rm -rf /var/cache/dnf && \
     wget -q https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz && \
     wget -q -O apache-tomcat-${TOMCAT_VERSION}.tar.gz.sha512 https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.sha512 && \
     wget -q -O apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc && \
