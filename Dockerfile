@@ -33,8 +33,11 @@ RUN dnf -y install gnupg2 && \
     gpg --batch --import KEYS && \
     sha512sum -c apache-tomcat-${TOMCAT_VERSION}.tar.gz.sha512 && \
     gpg --batch --verify apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc apache-tomcat-${TOMCAT_VERSION}.tar.gz && \
-    SIGKEYID="$(gpg --batch --status-fd=1 --verify apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc apache-tomcat-${TOMCAT_VERSION}.tar.gz 2>/dev/null | awk '/^\[GNUPG:\] GOODSIG /{print $3; exit}')" && \
-    SIGNER="$(gpg --list-keys --with-colons | awk -F: -v id="$SIGKEYID" '/^pub/{primary=""} /^fpr/ && primary=="" {primary=$10} /^sub/ && $5==id {print primary; exit}')" && \
+    SIGNER="$(gpg --batch --status-fd=1 --verify apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc apache-tomcat-${TOMCAT_VERSION}.tar.gz 2>/dev/null | awk '/^\[GNUPG:\] VALIDSIG /{ if (NF>=12 && $12 ~ /^[0-9A-F]{40}$/) print $12; else print $3; exit }')" && \
+    case "$SIGNER" in \
+        ????????????????????????????????????????) ;; \
+        *) echo "GPG did not report a valid primary-key fingerprint: '$SIGNER'" >&2; exit 1 ;; \
+    esac && \
     case "$SIGNER" in \
         5C3C5F3E314C866292F359A8F3AD5C94A67F707E|A9C5DF4D22E99998D9875A5110C01C5A2F6059E7) ;; \
         *) echo "GPG signature not made by an allowed Tomcat release manager: $SIGNER" >&2; exit 1 ;; \
