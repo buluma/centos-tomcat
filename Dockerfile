@@ -28,7 +28,7 @@ ARG TOMCAT_KEYS_SHA256=850f793865c1b4a64ba505429702e32a20d71a3accb81b34fb3bf9989
 WORKDIR /tmp
 
 RUN dnf -y install gnupg2-2.2.20-4.el8_10 &&  dnf -y clean all &&  rm -rf /var/cache/dnf && \
-    wget -q https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz && \
+    wget -q https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz && \
     wget -q -O apache-tomcat-${TOMCAT_VERSION}.tar.gz.sha512 https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.sha512 && \
     wget -q -O apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc && \
     wget -q -O KEYS https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/KEYS && \
