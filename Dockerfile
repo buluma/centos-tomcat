@@ -18,7 +18,7 @@ ENV PATH=$PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
 
 # Install Tomcat
 ENV TOMCAT_MAJOR=10 \
-    TOMCAT_VERSION=10.1.59
+    TOMCAT_VERSION=10.1.60
 
 # Trust anchor: SHA-256 digest of the official Tomcat 10 release-manager KEYS file
 # (https://downloads.apache.org/tomcat/tomcat-10/KEYS). Change deliberately only
