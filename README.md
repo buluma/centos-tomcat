@@ -1,37 +1,47 @@
-# Centos Tomcat
+# Rocky Linux Tomcat
 
 [![Docker Image CI](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml/badge.svg)](https://github.com/buluma/centos-tomcat/actions/workflows/build.yml)
 
-Docker container: CentOS 8 + Java 17 + Tomcat 10
+This image is based on Rocky Linux 8 and includes Eclipse Temurin 17 and Apache Tomcat 10.1.60. Published images support `linux/amd64` and `linux/arm64`.
 
-## Build the image
+## Published images
+
+Images are published to Docker Hub and GitHub Container Registry with the `latest` and `10.1.60` tags.
+
+```sh
+docker pull buluma/centos-tomcat:10.1.60
+# Or:
+docker pull ghcr.io/buluma/centos-tomcat:10.1.60
+```
+
+## Build locally
 
 ```sh
 git clone https://github.com/buluma/centos-tomcat.git
 cd centos-tomcat
-docker build -t buluma/centos-tomcat .
+docker build -t centos-tomcat:local .
 ```
 
-## How to use
-Put your war under the `/opt/tomcat/webapps` directory and run the following command.
+## Deploy a WAR file
+
+Start the image, copy your WAR into Tomcat's deployment directory, and open port 8080:
 
 ```sh
-docker run -v /opt/tomcat/webapps:/opt/tomcat/webapps -v /opt/tomcat/logs:/opt/tomcat/logs -p 8080:8080 -i -t --name centos-tomcat buluma/centos-tomcat
+docker run -d --name centos-tomcat -p 8080:8080 buluma/centos-tomcat:10.1.60
+docker cp /path/to/your-app.war centos-tomcat:/opt/tomcat/webapps/
 ```
 
-Once you run it, you can start the container with `docker start centos-tomcat` in next time and log file will be under the `/opt/tomcat/logs` directory.
+Open [http://localhost:8080](http://localhost:8080). Follow the container output with `docker logs -f centos-tomcat`. Stop and restart it with `docker stop centos-tomcat` and `docker start centos-tomcat`; remove it with `docker rm -f centos-tomcat`.
 
-Also, if you got some error, you can remove the container with `docker rm centos-tomcat`. Your current container list will be show with `docker ps -a`.
+## Image contents
 
-For Mac user, you must share the directory `/opt/tomcat/webapps` and `/opt/tomcat/logs` on Docker > Preferences > File Sharing.
+| Component | Version |
+|:--|:--|
+| Base image | Rocky Linux 8 |
+| Java | Eclipse Temurin 17 |
+| Apache Tomcat | [10.1.60](https://tomcat.apache.org/download-10.cgi) |
+| Platforms | `linux/amd64`, `linux/arm64` |
 
-## Versions
-If you got error while build the docker image, please check the latest version of Java and Tomcat.
+Tomcat 10 uses Jakarta EE APIs (`jakarta.*`). Applications built for Tomcat 9 or earlier may need migration before they will run.
 
-|Software|Version|Note|
-|:-----------|:------------|:------------|
-|CentOS|8||
-|Java|17 [Java Release Note](https://jdk.java.net/17/release-notes)|
-|Apache Tomcat|10.1.60|[Tomcat Download Page](https://tomcat.apache.org/download-10.cgi)|
-
-[Docker Official Image for Tomcat](https://github.com/docker-library/tomcat) is also available.
+[The official Apache Tomcat image](https://github.com/docker-library/tomcat) is also available.
