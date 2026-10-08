@@ -11,7 +11,17 @@ RUN dnf -y update &&  dnf -y install wget-1.19.5-16.el8_10 tar-1.30-11.el8_10 &&
 ENV CATALINA_HOME=/opt/tomcat
 
 # Install Eclipse Temurin JDK 17 from Adoptium API
-RUN wget -q -O /tmp/jdk17.tar.gz "https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse" &&     tar -xzf /tmp/jdk17.tar.gz -C /usr/local/ &&     mv /usr/local/jdk-* /usr/local/jdk17 &&     rm -f /tmp/jdk17.tar.gz &&     ln -s /usr/local/jdk17/bin/java /usr/bin/java
+ARG TARGETARCH
+RUN case "${TARGETARCH:-$(uname -m)}" in \
+      amd64|x86_64) JDK_ARCH=x64 ;; \
+      arm64|aarch64) JDK_ARCH=aarch64 ;; \
+      *) echo "Unsupported target architecture: ${TARGETARCH:-$(uname -m)}" >&2; exit 1 ;; \
+    esac && \
+    wget -q -O /tmp/jdk17.tar.gz "https://api.adoptium.net/v3/binary/latest/17/ga/linux/${JDK_ARCH}/jdk/hotspot/normal/eclipse" && \
+    tar -xzf /tmp/jdk17.tar.gz -C /usr/local/ && \
+    mv /usr/local/jdk-* /usr/local/jdk17 && \
+    rm -f /tmp/jdk17.tar.gz && \
+    ln -s /usr/local/jdk17/bin/java /usr/bin/java
 
 ENV JAVA_HOME=/usr/local/jdk17
 ENV PATH=$PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin:$CATALINA_HOME/scripts
