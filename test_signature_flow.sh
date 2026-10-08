@@ -9,7 +9,7 @@
 set -u
 
 TOMCAT_MAJOR=10
-TOMCAT_VERSION=10.1.59
+TOMCAT_VERSION=10.1.60
 BASE="https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}"
 CDN="https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}"
 ARTDIR="${1:--d}"
